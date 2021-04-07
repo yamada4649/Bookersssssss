@@ -1,5 +1,6 @@
 class UsersController < ApplicationController
   before_action :authenticate_user!
+  before_action :eroos, only: [:edit,:update]
 
   def index
     #.allを使うかもしれない
@@ -11,9 +12,16 @@ class UsersController < ApplicationController
   def show
   	 @book = Book.new
   	 @user = User.find(params[:id])#どのユーザーの名前を表示
-     @userbooks = @user.books#投稿したbookの情報をもってくる.booksで
+     @userbooks = @user.books#投稿したbookの情報をもってくる.booksはuserもでるからきている
   	 #@user = current_user
 
+  end
+  def followings
+    @user = User.find(params[:id])
+  end
+
+  def followers
+    @user = User.find(params[:id])
   end
   def create
   	book = Book.new(book_params)
@@ -39,9 +47,16 @@ class UsersController < ApplicationController
 
   def edit
    @user = User.find(params[:id])
-   redirect_to user_path(current_user) unless @user == current_user
   end
 private
+def eroos
+    user = User.find(params[:id])
+    if  (current_user.id !=  user.id)
+      redirect_to user_path(current_user.id)
+    end
+
+    
+  end
 
 
   def user_params

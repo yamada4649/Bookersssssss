@@ -33,6 +33,20 @@
           <td>
             <%= userbook.body %>
           </td>
+          <td>
+          <% if userbook.favorited_by?(current_user) %>
+            <%= link_to book_favorites_path(userbook), method: :delete do %>
+              <%#= fa_icon "heart", text: "#{book.favorites.count}", style: "color: red;" %>
+              <span class="glyphicon glyphicon-heart"><%= userbook.favorites.count%></span>
+            <% end %>
+          <% else %>
+            <%= link_to book_favorites_path(userbook, redirect_id: 0), method: :post do %>
+              <%#= fa_icon "heart-o", text: "#{book.favorites.count}", style: "color: red;" %>
+              <span class="glyphicon glyphicon-heart-empty"><%= userbook.favorites.count %></span>
+            <% end %>
+          <% end %>
+        </td>
+         <td>コメント数：<%= userbook.book_comments.count %></td>
         </tr>
         <% end %>
       </tbody>

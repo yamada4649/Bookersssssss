@@ -1,6 +1,6 @@
 class BooksController < ApplicationController
   before_action :authenticate_user!
-  before_action :eroor, only: [:edit,:update]
+  before_action :eroos, only: [:edit,:update]
   def index
     @books = Book.all
     @user = User.find(current_user.id)
@@ -11,9 +11,11 @@ class BooksController < ApplicationController
  #@books = Book.where(id: params[:id])
 
   # books/2
-     @books = Book.find(params[:id])
-     @user = @books.user
+     @book = Book.find(params[:id])
+     @user = @book.user
 
+     @book_comment = BookComment.new
+     @book_comments = @book.book_comments
   	#@book = Book.find(params[:id])
   end
   def destroy
@@ -52,9 +54,9 @@ class BooksController < ApplicationController
      end
   end
   private
-  def eroor
+  def eroos
     book = Book.find(params[:id])
-    if (book.user_id != current_user.id)
+    if book.user_id != current_user.id#型の違いでうまくいかない可能性。user_idの型を確認するべし。
       redirect_to books_path
     end
     

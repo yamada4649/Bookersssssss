@@ -1,3 +1,3 @@
-class ApplicationRecord < ActiveRecord::Base
+class ApplicationRecord < ActiveRecord::Base#SQLに翻訳してくれる
   self.abstract_class = true
 end

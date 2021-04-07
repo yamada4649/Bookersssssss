@@ -4,7 +4,7 @@
     <% if flash[:notice] %>
       <p><%= flash[:notice] %></p>
     <% end %>
-       <%= render partial: 'users/form_html', locals: { book: @books, user:@user } %>
+       <%= render partial: 'users/form_html', locals: { book: Book.new, user:@book.user } %>
 
   </div>
 <div class="col-xs-9">
@@ -19,27 +19,33 @@
   </thead>
   <tbody>
    
-    <tr>
+    <tr id="book_<%= @book.id %>">
       <td>
-        <%= link_to user_path(@user.id) do %>
-        <%= attachment_image_tag @user, :profile_image, size:"100x100", format:"jpeg", fallback: "no_image.jpg" %>
+        <%= link_to user_path(@book.user) do %>
+        <%= attachment_image_tag @book.user, :profile_image, size:"100x100", format:"jpeg", fallback: "no_image.jpg" %>
         <br>
-        <%= @user.name %>
+        <%= @book.user.name %>
         <% end %>
       </td>
       <td>
-        <%= @books.title %>
+        <%= @book.title %>
       </td>
       <td>
-        <%= @books.body %>
+        <%= @book.body %>
       </td>
-     <% if @books.user == current_user %>
+      <td class="favorite-bth">
+        <%= render "favorites/favorite-bth", book: @book %>
+      </td>
+      <td class="comments-count">
+        コメント数:<%= @book.book_comments.count %>
+      </td>
+     <% if @book.user == current_user %>
       <td>
-        <%= link_to 'Edit', edit_book_path(@books.id) %>
+        <%= link_to 'Edit', edit_book_path(@book.id) %>
       </td>
       <td>
-        <% if @books.user == current_user %>
-        <%= link_to 'Destroy', book_path(@books),method: :delete,"data-confirm" =>"Are you sure?" %>
+        <% if @book.user == current_user %>
+        <%= link_to 'Destroy', book_path(@book),method: :delete,"data-confirm" =>"Are you sure?" %>
         <% end %>
       </td>
       <% end %>
@@ -48,6 +54,15 @@
 
   </tbody>
 </table>
+<table class="book_comments">
+  <%= render 'book_comments/index', book: @book %>
+</table>
+ <div class="comment-form">
+      <%= form_for [@book, @book_comment] do |f| %>
+        <%= f.text_area :comment, size: "90x5" %>
+        <%= f.submit '送信' %>
+      <% end %>
+    </div>
 </div>
 </div>
 </div>
